@@ -20,7 +20,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-y2-fwv6u85c8$+yiq#&@y@fc^k=q6m+a-mzc&0w#-_gb%r6dw+"
+# SECRET_KEY = "django-insecure-y2-fwv6u85c8$+yiq#&@y@fc^k=q6m+a-mzc&0w#-_gb%r6dw+"
+import os
+import dotenv # <- New
+
+# Add .env variables anywhere before SECRET_KEY
+dotenv_file = os.path.join(BASE_DIR, ".env")
+if os.path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
+
+# UPDATE secret key
+SECRET_KEY = os.environ['SECRET_KEY'] # Instead of your actual secret key
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,6 +47,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
+    "dashboard",
+    "channels",
+    "corsheaders"
 ]
 
 MIDDLEWARE = [
@@ -66,6 +80,7 @@ TEMPLATES = [
         },
     },
 ]
+ROOT_URLCONF = 'analytics.urls'
 
 WSGI_APPLICATION = "analytics.wsgi.application"
 
@@ -74,13 +89,24 @@ WSGI_APPLICATION = "analytics.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'analytics',
+        'USER': 'postgres',
+        'PASSWORD': 'aryaman2003',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
-
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('redis', 6379)],
+        },
+    },
+}
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
