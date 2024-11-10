@@ -30,7 +30,7 @@ if os.path.isfile(dotenv_file):
     dotenv.load_dotenv(dotenv_file)
 
 # UPDATE secret key
-SECRET_KEY = os.environ['SECRET_KEY'] # Instead of your actual secret key
+SECRET_KEY = "django-insecure-y2-fwv6u85c8$+yiq#&@y@fc^k=q6m+a-mzc&0w#-_gb%r6dw+"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "dashboard",
     "channels",
-    "corsheaders"
+    "corsheaders",
+    "drf_yasg"
 ]
 
 MIDDLEWARE = [
